@@ -32,7 +32,6 @@ class Particle:
     
     def move(self):
         t=1
-        self.path=[]
         while t<=FPS:    
             if self.x<=PARTICLE_RADIUS:
                 self.speed=-self.speed
@@ -50,14 +49,15 @@ class Particle:
                 other_part=particles[i]
                 bool=check_collision(self,other_part)
                 if bool:
-                    self.speed=0.3
-                    other_part.speed=0.3
+                    self.speed,other_part.speed=other_part.speed,self.speed
+                    self.angle,other_part.angle=other_part.angle,self.angle
                 else:
                     continue
             self.x+=cos(self.angle)*self.speed
             self.y+=sin(self.angle)*self.speed
-            position=(self.x,self.y)
-            self.path.append(position)
+            if self.is_tracer:
+                position=(self.x,self.y)
+                self.path.append(position)
             t+=1
     
     
@@ -70,6 +70,9 @@ def check_collision(self,other_particle):
     
 # Create particles   
 particles=[]
+for i in range(0,NUM_PARTICLES-1):
+    par=Particle(random.uniform(0,800),random.uniform(0,600))
+    particles.append(par)
 
 # Choose one particle as a tracer
 tracer_index = random.randint(0, NUM_PARTICLES - 1)
@@ -100,7 +103,7 @@ while True:
         
         # Draw path for the tracer
         if particle.is_tracer and len(particle.path) >= 2:
-            pygame.draw.lines( screen, particle.color, False, particle.path , 2)
+            pygame.draw.lines( screen, particle.color, False, particle.path, 2)
     
     pygame.display.flip()
     clock.tick(FPS)
