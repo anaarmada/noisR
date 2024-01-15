@@ -16,26 +16,18 @@ def convert_to_string(data):
     return binary_string
 
 teste = list(read_txt_file("seq1.txt"))
-teste.reverse()
 
 def integers(lst,new):
     current=0
     if len(lst)>=6:
+        curr_lst=lst[0:6]
+        curr_lst.reverse()
         for i in range(0,6):
-            if lst[i]=='0':
-                current+=1
-            else:
+            if curr_lst[i]!='0':
                 current+=2**i
         new.append(current)
-        return integers(lst[6:-1],new)
-    else:
-        for i in range(len(lst)):
-            if lst[i]=='0':
-                current+=1
-            else:
-                current+=2**i
-        new.append(current)
-        return new
+        return integers(lst[6:-1],new)    
+    return new
 
 int_list=integers(teste,[])
 
